@@ -12,6 +12,7 @@ class ProductController extends Controller
     {
         $category = Product::query()
             ->with(['media', 'category'])
+            ->orderBy('name')
             ->get();
 
         return ProductResource::collection($category);

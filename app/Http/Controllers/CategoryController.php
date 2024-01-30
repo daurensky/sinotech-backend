@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
@@ -22,7 +23,10 @@ class CategoryController extends Controller
     {
         $category = Category::query()
             ->where('slug', $slug)
-            ->with(['media', 'products'])
+            ->with([
+                'media',
+                'products' => fn(HasMany $query) => $query->orderBy('name'),
+            ])
             ->firstOrFail();
 
         return new CategoryResource($category);
