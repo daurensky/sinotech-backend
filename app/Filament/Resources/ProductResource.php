@@ -33,7 +33,8 @@ class ProductResource extends Resource
 
                 Forms\Components\SpatieMediaLibraryFileUpload::make('image')
                     ->collection('images')
-                    ->multiple(),
+                    ->multiple()
+                    ->reorderable(),
                 Forms\Components\MarkdownEditor::make('description')
                     ->toolbarButtons([
                         'attachFiles',
