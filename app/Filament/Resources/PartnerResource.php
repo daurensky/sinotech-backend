@@ -11,7 +11,6 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use App\Filament\Resources\PartnerResource\Pages;
-use App\Filament\Resources\PartnerResource\RelationManagers;
 
 class PartnerResource extends Resource
 {
@@ -33,7 +32,20 @@ class PartnerResource extends Resource
 
                 Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos'),
-                Forms\Components\MarkdownEditor::make('description'),
+                Forms\Components\MarkdownEditor::make('description')
+                    ->toolbarButtons([
+                        'attachFiles',
+                        'blockquote',
+                        'bold',
+                        'bulletList',
+                        'codeBlock',
+                        'heading',
+                        'italic',
+                        'link',
+                        'redo',
+                        'table',
+                        'undo',
+                    ]),
             ]);
     }
 
