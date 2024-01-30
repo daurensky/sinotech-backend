@@ -12,6 +12,7 @@ class CategoryController extends Controller
     {
         $category = Category::query()
             ->with(['media', 'products'])
+            ->orderBy('sort')
             ->get();
 
         return CategoryResource::collection($category);
