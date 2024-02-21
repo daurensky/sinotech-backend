@@ -19,7 +19,7 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'short_description' => $this->short_description,
             'description' => $this->description,
-            'images' => $this->media->map->original_url,
+            'images' => $this->getMedia('images')->map->getFullUrl(),
         ];
 
         if ($this->relationLoaded('category')) {

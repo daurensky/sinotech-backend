@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         $values = [
             'slug' => $this->slug,
             'name' => $this->name,
-            'image' => $this->media[0]?->original_url,
+            'image' => $this->getFirstMediaUrl('images'),
         ];
 
         if ($this->relationLoaded('products')) {
