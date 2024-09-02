@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
+use Illuminate\Support\Collection;
 use App\Filament\Resources\ProductResource\Pages;
 
 class ProductResource extends Resource
@@ -72,6 +73,38 @@ class ProductResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                Tables\Actions\BulkAction::make('exportAllAsJson')
+                    ->label(__('Export All'))
+                    ->action(function (Collection $records) {
+                        $archive = new \ZipArchive;
+                        $archive->open('products.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+                        $json = [];
+
+                        foreach ($records as $record) {
+                            $attributes = $record->only(
+                                ['id', 'category_id', 'slug', 'name', 'short_description', 'description',]
+                            );
+
+                            $medias = $record->getMedia('*');
+
+                            foreach ($medias as $media) {
+                                $path = Str::of($media->getUrl())->after('storage');
+                                $attributes['images'][] = '/assets/img/products'.$path;
+                                $archive->addFile($media->getPath(), $path);
+                            }
+
+                            $json[] = $attributes;
+                        }
+
+                        $content = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                        $archive->addFromString('products.json', $content);
+
+                        $archive->close();
+
+                        return response()->download('products.zip');
+                    })
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 
